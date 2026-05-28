@@ -1,0 +1,17 @@
+name = "quest-list-worker"
+main = "src/index.ts"
+compatibility_date = "2025-05-25"
+
+[[d1_databases]]
+binding = "TODO_DB"
+
+[[kv_namespaces]]
+binding = "TODO_KV"
+
+[[r2_buckets]]
+binding = "TODO_BUCKET"
+
+[vars]
+APP_NAME = "Quest List"
+DEFAULT_THEME = "cosmic-candy"
+MAX_ATTACHMENT_BYTES = "1048576"
