@@ -1057,7 +1057,8 @@ function renderApp(env: Env): string {
 
     $("#todoForm").addEventListener("submit", async (event) => {
       event.preventDefault();
-      const form = new FormData(event.currentTarget);
+      const formEl = event.currentTarget;
+      const form = new FormData(formEl);
       try {
         await api("/api/todos", {
           method: "POST",
@@ -1068,7 +1069,7 @@ function renderApp(env: Env): string {
             priority: form.get("priority")
           })
         });
-        event.currentTarget.reset();
+        formEl.reset();
         await refreshTodos();
         toast("Quest summoned.");
       } catch (error) {
@@ -1077,7 +1078,8 @@ function renderApp(env: Env): string {
     });
 
     $("#themeSelect").addEventListener("change", async (event) => {
-      const theme = event.currentTarget.value;
+      const select = event.currentTarget;
+      const theme = select.value;
       document.body.dataset.theme = theme;
       try {
         await api("/api/theme", { method: "POST", body: JSON.stringify({ theme }) });
@@ -1088,9 +1090,11 @@ function renderApp(env: Env): string {
     });
 
     $("#todos").addEventListener("click", async (event) => {
-      const button = event.target.closest("button");
+      const target = event.target;
+      const button = target && target.closest ? target.closest("button") : null;
       if (!button) return;
       const card = button.closest(".todo");
+      if (!card) return;
       const todo = state.todos.find((item) => item.id === card.dataset.id);
       if (!todo) return;
 
@@ -1121,26 +1125,30 @@ function renderApp(env: Env): string {
     });
 
     $("#todos").addEventListener("change", async (event) => {
-      if (event.target.dataset.action !== "upload") return;
-      const card = event.target.closest(".todo");
-      const file = event.target.files[0];
+      const input = event.target;
+      if (!input || !input.dataset || !input.files) return;
+      if (input.dataset.action !== "upload") return;
+      const card = input.closest(".todo");
+      const todoId = card && card.dataset.id;
+      const file = input.files[0];
+      if (!todoId) return;
       if (!file) return;
       if (file.size > state.config.maxAttachmentBytes) {
         toast("Loot is too mighty. Max " + state.config.maxAttachmentBytes + " bytes.");
-        event.target.value = "";
+        input.value = "";
         return;
       }
 
       const body = new FormData();
       body.append("file", file);
       try {
-        await api("/api/todos/" + encodeURIComponent(card.dataset.id) + "/attachment", { method: "POST", body });
+        await api("/api/todos/" + encodeURIComponent(todoId) + "/attachment", { method: "POST", body });
         await refreshTodos();
         toast("Loot stashed in R2.");
       } catch (error) {
         toast(error.message);
       } finally {
-        event.target.value = "";
+        input.value = "";
       }
     });
 
@@ -1164,7 +1172,12 @@ function renderApp(env: Env): string {
     }
 
     function escapeHtml(value) {
-      return String(value).replace(/[&<>"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[char]));
+      return String(value).replace(/[&<>"]/g, (char) => {
+        if (char === "&") return "&amp;";
+        if (char === "<") return "&lt;";
+        if (char === ">") return "&gt;";
+        return "&quot;";
+      });
     }
 
     init().catch((error) => toast(error.message));
