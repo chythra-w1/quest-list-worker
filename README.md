@@ -7,6 +7,7 @@ A fun Cloudflare Workers todo app using all three storage primitives:
 - D1 stores todos.
 - KV stores app preferences like the selected theme and daily vibe.
 - R2 stores optional todo attachments.
+- testing out changessss and sees what happens
 
 ## Setup
 
