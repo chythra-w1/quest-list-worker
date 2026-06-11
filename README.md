@@ -1,7 +1,6 @@
 # Quest List
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/chythra-w1/quest-list-worker)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fchythra-w1%2Fquest-list-worker)
 
 A fun Cloudflare Workers todo app using all three storage primitives:
 
