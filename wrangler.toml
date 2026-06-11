@@ -1,4 +1,4 @@
-name = "quest-list-worker"
+name = "quest-list-worker8"
 main = "src/index.ts"
 compatibility_date = "2025-05-25"
 
